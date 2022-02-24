@@ -3,7 +3,10 @@ package com.stratushunter.falcon9.activities
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import com.stratushunter.falcon9.classes.adapters.LaunchLoadStateAdapter
 import com.stratushunter.falcon9.classes.adapters.LaunchPaginatedAdapter
 import com.stratushunter.falcon9.databinding.ActivityMainBinding
 import com.stratushunter.falcon9.viewmodels.MainViewModel
@@ -15,24 +18,34 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
     private val adapter = LaunchPaginatedAdapter()
-
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setupViews()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         bindDataToViews()
-    }
 
-    private fun setupViews() {
+        binding.recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = LaunchLoadStateAdapter(adapter::retry),
+            footer = LaunchLoadStateAdapter(adapter::retry))
 
-        ActivityMainBinding.inflate(layoutInflater).apply {
+        binding.retryButton.setOnClickListener { adapter.retry() }
 
-            setContentView(root)
-            recyclerView.adapter = adapter
-        }
     }
 
     private fun bindDataToViews() {
+
+        lifecycleScope.launch {
+
+            adapter.loadStateFlow.collectLatest {
+
+                val refresh = it.refresh
+                binding.progressBar.isVisible = refresh is LoadState.Loading
+                binding.retryButton.isVisible = refresh is LoadState.Error
+            }
+        }
 
         lifecycleScope.launch {
 
