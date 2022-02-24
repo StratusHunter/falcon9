@@ -1,24 +1,44 @@
 package com.stratushunter.falcon9.activities
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.stratushunter.falcon9.R
-import com.stratushunter.falcon9.classes.falcon9paginatedlaunchprovider.RetrofitFalcon9PaginatedLaunchProvider
 import androidx.lifecycle.lifecycleScope
+import com.stratushunter.falcon9.classes.adapters.LaunchPaginatedAdapter
+import com.stratushunter.falcon9.databinding.ActivityMainBinding
+import com.stratushunter.falcon9.viewmodels.MainViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
+    private val viewModel by viewModels<MainViewModel>()
+    private val adapter = LaunchPaginatedAdapter()
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setupViews()
+        bindDataToViews()
+    }
 
-        val provider = RetrofitFalcon9PaginatedLaunchProvider()
+    private fun setupViews() {
+
+        ActivityMainBinding.inflate(layoutInflater).apply {
+
+            setContentView(root)
+            recyclerView.adapter = adapter
+        }
+    }
+
+    private fun bindDataToViews() {
 
         lifecycleScope.launch {
-            val response = provider.fetchFalcon9Launches(1, 10)
-            response.docs
+
+            viewModel.paginatedLaunchesFlow
+                .distinctUntilChanged()
+                .collectLatest { adapter.submitData(it) }
         }
     }
 }

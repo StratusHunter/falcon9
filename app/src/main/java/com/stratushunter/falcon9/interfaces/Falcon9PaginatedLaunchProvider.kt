@@ -1,6 +1,6 @@
 package com.stratushunter.falcon9.interfaces
 
-import com.stratushunter.falcon9.classes.SpaceXResponse
+import com.stratushunter.falcon9.classes.response.SpaceXResponse
 
 interface Falcon9PaginatedLaunchProvider {
 

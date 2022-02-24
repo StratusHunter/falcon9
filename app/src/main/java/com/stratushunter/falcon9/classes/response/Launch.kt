@@ -1,4 +1,4 @@
-package com.stratushunter.falcon9.classes
+package com.stratushunter.falcon9.classes.response
 
 data class Launch(
     val id: String,

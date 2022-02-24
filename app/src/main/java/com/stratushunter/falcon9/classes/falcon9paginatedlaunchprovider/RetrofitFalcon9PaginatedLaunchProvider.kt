@@ -2,10 +2,10 @@ package com.stratushunter.falcon9.classes.falcon9paginatedlaunchprovider
 
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
-import com.stratushunter.falcon9.classes.SpaceXOptions
-import com.stratushunter.falcon9.classes.SpaceXQuery
-import com.stratushunter.falcon9.classes.SpaceXQueryBody
-import com.stratushunter.falcon9.classes.SpaceXResponse
+import com.stratushunter.falcon9.classes.request.SpaceXOptions
+import com.stratushunter.falcon9.classes.request.SpaceXQuery
+import com.stratushunter.falcon9.classes.request.SpaceXQueryBody
+import com.stratushunter.falcon9.classes.response.SpaceXResponse
 import com.stratushunter.falcon9.constants.Config
 import com.stratushunter.falcon9.enums.Rocket
 import com.stratushunter.falcon9.enums.SpaceXSelectOptions
