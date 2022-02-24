@@ -10,9 +10,8 @@ import com.stratushunter.falcon9.classes.falcon9paginatedlaunchprovider.Retrofit
 import com.stratushunter.falcon9.constants.Config
 import com.stratushunter.falcon9.interfaces.Falcon9PaginatedLaunchProvider
 
-class MainViewModel(
-    launchProvider: Falcon9PaginatedLaunchProvider = RetrofitFalcon9PaginatedLaunchProvider(),
-    pageSize: Int = Config.pageSize) : ViewModel() {
+class MainViewModel(launchProvider: Falcon9PaginatedLaunchProvider = RetrofitFalcon9PaginatedLaunchProvider(),
+                    pageSize: Int = Config.pageSize) : ViewModel() {
 
     val paginatedLaunchesFlow = Pager(PagingConfig(pageSize)) { LaunchPagingSource(launchProvider) }
         .flow

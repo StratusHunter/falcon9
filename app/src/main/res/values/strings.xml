@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Falcon9</string>
+    <string name="retry">Retry</string>
+    <string name="success">Success</string>
+    <string name="failure">Failure</string>
+    <string name="launch_patch_image">Launch patch image</string>
 </resources>

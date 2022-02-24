@@ -1,5 +1,6 @@
 package com.stratushunter.falcon9.classes
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.stratushunter.falcon9.classes.response.Launch
@@ -17,11 +18,7 @@ class LaunchPagingSource(private val falcon9PaginatedLaunchProvider: Falcon9Pagi
         return try {
 
             val response = falcon9PaginatedLaunchProvider.fetchFalcon9Launches(page, params.loadSize)
-            val launches = response.docs
-            LoadResult.Page(
-                launches,
-                prevKey = if (page == defaultPage) null else page - 1,
-                nextKey = if (launches.isEmpty()) null else page + 1)
+            LoadResult.Page(response.docs, null, response.nextPage)
         }
         catch (exception: Exception) {
 
@@ -29,6 +26,12 @@ class LaunchPagingSource(private val falcon9PaginatedLaunchProvider: Falcon9Pagi
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Launch>): Int? = null
+    override fun getRefreshKey(state: PagingState<Int, Launch>): Int? {
+
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
+    }
     //endregion
 }
