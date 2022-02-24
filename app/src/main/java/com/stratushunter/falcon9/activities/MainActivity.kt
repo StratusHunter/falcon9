@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.stratushunter.falcon9.classes.adapters.LaunchLoadStateAdapter
 import com.stratushunter.falcon9.classes.adapters.LaunchPaginatedAdapter
+import com.stratushunter.falcon9.classes.imageloader.GlideImageLoader
 import com.stratushunter.falcon9.databinding.ActivityMainBinding
 import com.stratushunter.falcon9.viewmodels.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -17,15 +18,16 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
-    private val adapter = LaunchPaginatedAdapter()
+    private lateinit var adapter : LaunchPaginatedAdapter
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        bindDataToViews()
+        adapter = LaunchPaginatedAdapter(GlideImageLoader(this))
 
         binding.recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
             header = LaunchLoadStateAdapter(adapter::retry),
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.retryButton.setOnClickListener { adapter.retry() }
 
+        bindDataToViews()
     }
 
     private fun bindDataToViews() {
